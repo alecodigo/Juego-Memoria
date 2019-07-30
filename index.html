@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Juedo de Memoria</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            height: 50%;
+            width: 50%;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            border: 5px solid black;
+        }
+
+        .square {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0099e5;
+            border: 1.5px solid black;
+            font-size: 2em;
+            color: #0099e5;
+            transition: .2s;
+        }
+
+        .square:hover {
+            transform: scale(1.05)
+        }
+
+        .board {
+            display: flex;
+            justify-content: space-between;
+            box-sizing: border-box;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #0099e5;
+            border: 3px solid black;
+            color: white;
+            width: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Juego de Memoria</h1>
+    <div class="container">
+        <div class="square" id="cuadro-1">5</div>
+        <div class="square" id="cuadro-2">5</div>
+        <div class="square" id="cuadro-3">3</div>
+        <div class="square" id="cuadro-4">1</div>
+        <div class="square" id="cuadro-5">2</div>
+        <div class="square" id="cuadro-6">9</div>
+        <div class="square" id="cuadro-7">3</div>
+        <div class="square" id="cuadro-8">8</div>
+        <div class="square" id="cuadro-9">9</div>
+    </div>
+    <div class="board">
+        Puntaje:
+        <div class="score" id="score">
+            0
+        </div>
+    </div>
+    <script>
+        const square1 = document.getElementById("cuadro-1")
+        const square2 = document.getElementById("cuadro-2")
+        const square3 = document.getElementById("cuadro-3")
+        const square4 = document.getElementById("cuadro-4")
+        const square5 = document.getElementById("cuadro-5")
+        const square6 = document.getElementById("cuadro-6")
+        const square7 = document.getElementById("cuadro-7")
+        const square8 = document.getElementById("cuadro-8")
+        const square9 = document.getElementById("cuadro-9")
+        const puntaje = document.getElementById("score")
+
+        var valor_encontrado = []
+
+        square1.addEventListener('click', (ev) => {
+            console.log(ev)
+            square1.style.background = 'white'
+            valor_encontrado.push(5)
+            comprobar()
+        })
+
+        square2.addEventListener('click', (ev) => {
+            square2.style.background = 'white'
+            valor_encontrado.push(5)
+            comprobar()
+        })
+
+        square3.addEventListener('click', (ev) => {
+            square3.style.background = 'white'
+            valor_encontrado.push(3)
+            comprobar()
+        })
+        
+        square4.addEventListener('click', (ev) => {
+            square4.style.background = 'white'
+            valor_encontrado.push(1)
+            comprobar()
+        })
+
+        square5.addEventListener('click', (ev) => {
+            square5.style.background = 'white'
+            valor_encontrado.push(2)
+            comprobar()
+        })
+
+        square6.addEventListener('click', (ev) => {
+            square6.style.background = 'white'
+            valor_encontrado.push(9)
+            comprobar()
+        })
+
+        square7.addEventListener('click', (ev) => {
+            square7.style.background = 'white'
+            valor_encontrado.push(3)
+            comprobar()
+        })
+        
+        square8.addEventListener('click', (ev) => {
+            square8.style.background = 'white'
+            valor_encontrado.push(8)
+            comprobar()
+        })
+        
+        square9.addEventListener('click', (ev) => {
+            square9.style.background = 'white'
+            valor_encontrado.push(9)
+            comprobar()
+        })
+
+
+
+        function comprobar() {
+            if(valor_encontrado[0]) {
+
+                if(valor_encontrado[1]) {
+
+                    if (valor_encontrado[0] === valor_encontrado[1]) {
+                        score()
+                    }
+
+                    else {
+                        valor_encontrado = []
+                    }
+                }
+            }
+        }
+
+        function score() {
+            x = puntaje.innerText
+            console.log(x)
+            puntaje.innerHTML = Number(x) + 1
+            // limpio el array de control
+            valor_encontrado = []
+        }
+    </script>
+</body>
+</html>
