@@ -71,7 +71,7 @@
             transform: scale(.8);
         }
 
-        .btn-animate {
+        .btn-animateOut {
             /* animation: btnOut 2s ease; */
             animation-name: btnOut;
             animation-duration: 2s;
@@ -88,6 +88,22 @@
             }
         }
 
+        .btn-animateIn {
+            /* animation: btnOut 2s ease; */
+            animation-name: btnIn;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes btnIn {
+            0% {
+                transform: translateY(-3000px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
 
     </style>
 </head>
@@ -130,7 +146,8 @@
         const intento = document.getElementById("intentos")
         const btn = document.getElementById('btnEmpezar')
 
-        const CASILLAS = 9
+        var PUNTAJE = 0
+        var INTENTOS = 3
 
 
 
@@ -139,13 +156,13 @@
             this.inicializar = this.inicializar.bind(this)
             this.inicializar()
             // this.generarSerieAleatoria()
-            this.agregarEventosClick()
             this.comprobar()
+            this.afterStart()
+            this.agregarEventosClick()
         }
 
         inicializar() {
             // atamos this a este contexto
-            this.afterStart()
             this.addStyle = this.addStyle.bind(this)
             this.valor_encontrado = []
             this.eventos = {
@@ -161,15 +178,44 @@
                 puntaje,
                 intento
             }
+            this.reiniciar()
+            // this.agregarEventosClick()
+
+        }
+
+        afterStart() {
+            if(btn.classList.contains('btn-animateIn')) {
+                btn.classList.remove('btn-animateIn')
+                btn.classList.add('btn-animateOut')
+            }
+            else {
+                btn.classList.add('btn-animateOut')
+            }
             
         }
 
-
-
-        afterStart() {
-            btn.classList.add('btn-animate')
+        reiniciar() {
+            // Reinicio la puntuacion
+            this.eventos.puntaje.innerHTML = 0
+            // Reinicio los intentos
+            this.eventos.intento.innerHTML = 3
+            // Vuelvo a pintar los cuadros
+            square1.style.background = '#0099e5'
+            square2.style.background = '#0099e5'
+            square3.style.background = '#0099e5'
+            square4.style.background = '#0099e5'
+            square5.style.background = '#0099e5'
+            square6.style.background = '#0099e5'
+            square7.style.background = '#0099e5'
+            square8.style.background = '#0099e5'
+            square9.style.background = '#0099e5'
+            // Reaparece el boton
+            if (btn.classList.contains('btn-animateOut')) {
+                btn.classList.remove('btn-animateOut')
+                btn.classList.add('btn-animateIn')
+            }
+            // btn.classList.remove('btn-animateOut')
         }
-
 
         agregarEventosClick() {
             this.eventos.square1.addEventListener('click', this.addStyle)
@@ -258,29 +304,25 @@
         }
 
         score() {
-            let pto = this.eventos.puntaje.innerText
-            this.eventos.puntaje.innerHTML = Number(pto) + 1
+            PUNTAJE = PUNTAJE + 1
+            // console.log(PUNTAJE)
+            this.eventos.puntaje.innerHTML = PUNTAJE
+            // let puntaje = Number(pto) + 1
             //limpio el array de control
             this.valor_encontrado = []
-
-            //Debemos verificar que puntaje llevamos
-            let pto2 = this.eventos.puntaje.innerText
-            if (Number(pto2) === 2) {
-                //Fin de Juego :)
+            if(PUNTAJE === 2) {
                 this.ganoElJuego()
             }
+            
         }
 
         intentos() {
-            let pto = this.eventos.intento.innerText
-            // console.log(pto)
-            if (Number(pto) != 0) {
-                this.eventos.intento.innerHTML = Number(pto) - 1
-                //verifico nuevamente si se hace cero
-                let pto2 = this.eventos.intento.innerText
-                if (Number(pto2) === 0) {
-                    this.perdioElJuego()
-                }
+            INTENTOS = INTENTOS - 1
+            console.log(INTENTOS)
+            this.eventos.intento.innerHTML = INTENTOS
+            //verifico nuevamente si se hace cero
+            if (INTENTOS === 0) {
+                this.perdioElJuego()
             }
         }
 
@@ -288,13 +330,14 @@
             //swal devuelve una Promesa
             swal('Felicidades Ganaste!!! :)', 'success')
                 .then(() => {
+                    this.eliminarEventosClick()
                     this.inicializar()
             })
         }
 
         perdioElJuego() {
             //swal devuelve una Promesa
-            swal('Lo lamentamos, te quedaste sin intentos :(', '')
+            swal('Lo lamentamos, te quedaste sin intentos :(', 'error')
                 .then(() => {
                     this.eliminarEventosClick()
                     this.inicializar()
@@ -306,6 +349,7 @@
         // termina la clase Juego
     }
 
+    // Aqui empieza el viaje :)
     function empezarJuego() {
         juego = new Juego()
     }
