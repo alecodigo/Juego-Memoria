@@ -34,9 +34,9 @@
             transition: .2s;
         }
 
-        .square:hover {
+        /* .square:hover {
             transform: scale(1.05)
-        }
+        } */
 
         .board {
             display: flex;
@@ -47,9 +47,48 @@
             background-color: #0099e5;
             border: 3px solid black;
             color: white;
-            width: 100px;
+            width: 150px;
             text-align: center;
         }
+        .score {
+            margin-right: 5px;
+        }
+
+        .btn-start {
+            border-radius: 5px;
+            border: none;
+            width: 400px;
+            height: 100px;
+            background: #ff4c4c;
+            color: white;
+            font-size: 2.5rem;
+            position: absolute;
+            top: calc(50% - 50px);
+            left: calc(50% - 200px);
+            transition: .3s;
+        }
+        .btn-start:active {
+            transform: scale(.8);
+        }
+
+        .btn-animate {
+            /* animation: btnOut 2s ease; */
+            animation-name: btnOut;
+            animation-duration: 2s;
+            animation-timing-function: ease;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes btnOut {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-3000px);
+            }
+        }
+
+
     </style>
 </head>
 <body>
@@ -65,13 +104,19 @@
         <div class="square" id="cuadro-8">8</div>
         <div class="square" id="cuadro-9">9</div>
     </div>
+    <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
     <div class="board">
         Puntaje:
         <div class="score" id="score">
             0
         </div>
+        Intentos:
+        <div class="intentos" id="intentos">
+            3
+        </div>
     </div>
-    <script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+        <script>
         const square1 = document.getElementById("cuadro-1")
         const square2 = document.getElementById("cuadro-2")
         const square3 = document.getElementById("cuadro-3")
@@ -82,89 +127,189 @@
         const square8 = document.getElementById("cuadro-8")
         const square9 = document.getElementById("cuadro-9")
         const puntaje = document.getElementById("score")
+        const intento = document.getElementById("intentos")
+        const btn = document.getElementById('btnEmpezar')
 
-        var valor_encontrado = []
-
-        square1.addEventListener('click', (ev) => {
-            console.log(ev)
-            square1.style.background = 'white'
-            valor_encontrado.push(5)
-            comprobar()
-        })
-
-        square2.addEventListener('click', (ev) => {
-            square2.style.background = 'white'
-            valor_encontrado.push(5)
-            comprobar()
-        })
-
-        square3.addEventListener('click', (ev) => {
-            square3.style.background = 'white'
-            valor_encontrado.push(3)
-            comprobar()
-        })
-        
-        square4.addEventListener('click', (ev) => {
-            square4.style.background = 'white'
-            valor_encontrado.push(1)
-            comprobar()
-        })
-
-        square5.addEventListener('click', (ev) => {
-            square5.style.background = 'white'
-            valor_encontrado.push(2)
-            comprobar()
-        })
-
-        square6.addEventListener('click', (ev) => {
-            square6.style.background = 'white'
-            valor_encontrado.push(9)
-            comprobar()
-        })
-
-        square7.addEventListener('click', (ev) => {
-            square7.style.background = 'white'
-            valor_encontrado.push(3)
-            comprobar()
-        })
-        
-        square8.addEventListener('click', (ev) => {
-            square8.style.background = 'white'
-            valor_encontrado.push(8)
-            comprobar()
-        })
-        
-        square9.addEventListener('click', (ev) => {
-            square9.style.background = 'white'
-            valor_encontrado.push(9)
-            comprobar()
-        })
+        const CASILLAS = 9
 
 
 
-        function comprobar() {
-            if(valor_encontrado[0]) {
+    class Juego {
+        constructor () {
+            this.inicializar = this.inicializar.bind(this)
+            this.inicializar()
+            // this.generarSerieAleatoria()
+            this.agregarEventosClick()
+            this.comprobar()
+        }
 
-                if(valor_encontrado[1]) {
+        inicializar() {
+            // atamos this a este contexto
+            this.afterStart()
+            this.addStyle = this.addStyle.bind(this)
+            this.valor_encontrado = []
+            this.eventos = {
+                square1,
+                square2,
+                square3,
+                square4,
+                square5,
+                square6,
+                square7,
+                square8,
+                square9,
+                puntaje,
+                intento
+            }
+            
+        }
 
-                    if (valor_encontrado[0] === valor_encontrado[1]) {
-                        score()
-                    }
 
-                    else {
-                        valor_encontrado = []
-                    }
+
+        afterStart() {
+            btn.classList.add('btn-animate')
+        }
+
+
+        agregarEventosClick() {
+            this.eventos.square1.addEventListener('click', this.addStyle)
+            this.eventos.square2.addEventListener('click', this.addStyle)
+            this.eventos.square3.addEventListener('click', this.addStyle)
+            this.eventos.square4.addEventListener('click', this.addStyle)
+            this.eventos.square5.addEventListener('click', this.addStyle)
+            this.eventos.square6.addEventListener('click', this.addStyle)
+            this.eventos.square7.addEventListener('click', this.addStyle)
+            this.eventos.square8.addEventListener('click', this.addStyle)
+            this.eventos.square9.addEventListener('click', this.addStyle)
+        }
+
+        eliminarEventosClick() {
+            this.eventos.square1.removeEventListener('click', this.addStyle)
+            this.eventos.square2.removeEventListener('click', this.addStyle)
+            this.eventos.square3.removeEventListener('click', this.addStyle)
+            this.eventos.square4.removeEventListener('click', this.addStyle)
+            this.eventos.square5.removeEventListener('click', this.addStyle)
+            this.eventos.square6.removeEventListener('click', this.addStyle)
+            this.eventos.square7.removeEventListener('click', this.addStyle)
+            this.eventos.square8.removeEventListener('click', this.addStyle)
+            this.eventos.square9.removeEventListener('click', this.addStyle)
+        }
+
+        addStyle(ev) { 
+            if (ev.target.id === 'cuadro-1') {
+                console.log(this)
+                square1.style.background = 'white'
+                this.valor_encontrado.push(5)
+                this.comprobar()
+            }
+            else if (ev.target.id === 'cuadro-2') {
+                square2.style.background = 'white'
+                this.valor_encontrado.push(5)
+                this.comprobar()
+            }
+            else if (ev.target.id === 'cuadro-3') {
+                square3.style.background = 'white'
+                this.valor_encontrado.push(3)
+                this.comprobar()
+            }
+            else if (ev.target.id === 'cuadro-4') {
+                square4.style.background = 'white'
+                this.valor_encontrado.push(1)
+                this.comprobar()
+            }
+            else if (ev.target.id === 'cuadro-5') {
+                square5.style.background = 'white'
+                this.valor_encontrado.push(2)
+                this.comprobar()
+            }
+            else if (ev.target.id === 'cuadro-6') {
+                square6.style.background = 'white'
+                this.valor_encontrado.push(9)
+                this.comprobar()
+            }
+            else if (ev.target.id === 'cuadro-7') {
+                square7.style.background = 'white'
+                this.valor_encontrado.push(3)
+                this.comprobar()
+            }
+            else if (ev.target.id === 'cuadro-8') {
+                square8.style.background = 'white'
+                this.valor_encontrado.push(8)
+                this.comprobar()
+            }
+            else if (ev.target.id === 'cuadro-9') {
+                square9.style.background = 'white'
+                this.valor_encontrado.push(9)
+                this.comprobar()
+            }
+        }
+
+        comprobar() {
+            if(this.valor_encontrado[0] && this.valor_encontrado[1]) {
+                // si son iguales llamo a score
+                if (this.valor_encontrado[0] === this.valor_encontrado[1]) {
+                    this.score()
+                } 
+                else {
+                    this.valor_encontrado = []
+                    this.intentos()
                 }
             }
         }
 
-        function score() {
-            x = puntaje.innerText
-            console.log(x)
-            puntaje.innerHTML = Number(x) + 1
-            // limpio el array de control
-            valor_encontrado = []
+        score() {
+            let pto = this.eventos.puntaje.innerText
+            this.eventos.puntaje.innerHTML = Number(pto) + 1
+            //limpio el array de control
+            this.valor_encontrado = []
+
+            //Debemos verificar que puntaje llevamos
+            let pto2 = this.eventos.puntaje.innerText
+            if (Number(pto2) === 2) {
+                //Fin de Juego :)
+                this.ganoElJuego()
+            }
         }
+
+        intentos() {
+            let pto = this.eventos.intento.innerText
+            // console.log(pto)
+            if (Number(pto) != 0) {
+                this.eventos.intento.innerHTML = Number(pto) - 1
+                //verifico nuevamente si se hace cero
+                let pto2 = this.eventos.intento.innerText
+                if (Number(pto2) === 0) {
+                    this.perdioElJuego()
+                }
+            }
+        }
+
+        ganoElJuego() {
+            //swal devuelve una Promesa
+            swal('Felicidades Ganaste!!! :)', 'success')
+                .then(() => {
+                    this.inicializar()
+            })
+        }
+
+        perdioElJuego() {
+            //swal devuelve una Promesa
+            swal('Lo lamentamos, te quedaste sin intentos :(', '')
+                .then(() => {
+                    this.eliminarEventosClick()
+                    this.inicializar()
+                })
+        }
+
+
+
+        // termina la clase Juego
+    }
+
+    function empezarJuego() {
+        juego = new Juego()
+    }
+
     </script>
 </body>
 </html>
