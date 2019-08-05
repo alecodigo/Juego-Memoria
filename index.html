@@ -163,6 +163,8 @@
 
         inicializar() {
             // atamos this a este contexto
+            PUNTAJE = 0
+            INTENTOS = 3
             this.addStyle = this.addStyle.bind(this)
             this.valor_encontrado = []
             this.eventos = {
@@ -243,49 +245,58 @@
 
         addStyle(ev) { 
             if (ev.target.id === 'cuadro-1') {
-                console.log(this)
                 square1.style.background = 'white'
                 this.valor_encontrado.push(5)
+                // Removemos el manjeador de eventos
+                square1.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
             else if (ev.target.id === 'cuadro-2') {
                 square2.style.background = 'white'
                 this.valor_encontrado.push(5)
+                square2.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
             else if (ev.target.id === 'cuadro-3') {
                 square3.style.background = 'white'
                 this.valor_encontrado.push(3)
+                square3.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
             else if (ev.target.id === 'cuadro-4') {
                 square4.style.background = 'white'
                 this.valor_encontrado.push(1)
+                square4.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
             else if (ev.target.id === 'cuadro-5') {
                 square5.style.background = 'white'
                 this.valor_encontrado.push(2)
+                square5.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
             else if (ev.target.id === 'cuadro-6') {
                 square6.style.background = 'white'
                 this.valor_encontrado.push(9)
+                square6.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
             else if (ev.target.id === 'cuadro-7') {
                 square7.style.background = 'white'
                 this.valor_encontrado.push(3)
+                square7.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
             else if (ev.target.id === 'cuadro-8') {
                 square8.style.background = 'white'
                 this.valor_encontrado.push(8)
+                square8.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
             else if (ev.target.id === 'cuadro-9') {
                 square9.style.background = 'white'
                 this.valor_encontrado.push(9)
+                square9.removeEventListener('click', this.addStyle)
                 this.comprobar()
             }
         }
@@ -318,7 +329,6 @@
 
         intentos() {
             INTENTOS = INTENTOS - 1
-            console.log(INTENTOS)
             this.eventos.intento.innerHTML = INTENTOS
             //verifico nuevamente si se hace cero
             if (INTENTOS === 0) {
